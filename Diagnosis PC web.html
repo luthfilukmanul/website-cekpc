@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CEK PC</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom, #4a90e2, #63b8ff);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            flex-direction: column;
+        }
+        .container {
+            text-align: center;
+            padding: 20px;
+        }
+        .logo {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        .description {
+            font-size: 1em;
+            margin-bottom: 20px;
+        }
+        .button {
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.2em;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .button:hover {
+            background-color: #357abd;
+        }
+        .input-section {
+            display: none;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            padding: 20px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+            text-align: left;
+        }
+        .input-section h2 {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+        .symptom {
+            margin: 10px 0;
+        }
+        .symptom input {
+            margin-right: 10px;
+        }
+        .result-section {
+            display: none;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            padding: 20px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+            text-align: left;
+        }
+        .result-section h2 {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+        .result-item {
+            margin: 10px 0;
+        }
+        .back-btn {
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 1em;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .back-btn:hover {
+            background-color: #357abd;
+        }
+        @media (min-width: 768px) {
+            .input-section, .result-section {
+                width: 50%;
+                max-width: 500px;
+            }
+            .button {
+                font-size: 1.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <img src="https://github.com/hostingplace/pclogosettings/blob/main/settings%20(1).png?raw=true" alt="CEK PC Logo" width="55" height="40" >
+    <div class="container" id="home">
+        <div class="logo">
+            CEK PC
+        </div>
+        <div class="description">
+            Sistem ini Membantu Anda Mendiagnosa Kerusakan Komputer Berdasarkan Gejala Yang Dialami, Menggunakan Metode Dempster-Shafer
+        </div>
+        <button class="button" onclick="showInput()">MULAI DIAGNOSA</button>
+    </div>
+    <footer style="position:fixed; bottom:0; width:100%; background:#f9f9f9; text-align:center; padding:8px 0; font-size:12px; color:#888; z-index:100;">
+  Copyright © 2025 DiagnosisPC | Dibuat oleh Nadila
+</footer>
+    <div class="input-section" id="input">
+        <h2>INPUT GEJALA</h2>
+        <div class="symptom"><input type="checkbox" name="symptom" value="not_booting"> Komputer tidak menyalah</div>
+        <div class="symptom"><input type="checkbox" name="symptom" value="beep_sound"> Muncul bunyi beep</div>
+        <div class="symptom"><input type="checkbox" name="symptom" value="system_hang"> Sistem Hang</div>
+        <div class="symptom"><input type="checkbox" name="symptom" value="no_display"> Layar Tidak Tampil</div>
+        <div class="symptom"><input type="checkbox" name="symptom" value="auto_restart"> Komputer Restart Sendiri</div>
+        <div class="symptom"><input type="checkbox" name="symptom" value="battery_drain"> Baterai boros</div>
+        <button class="button" onclick="processDiagnosis()">PROSES</button>
+        <p>Pilih gejala yang Anda alami</p>
+    </div>
+    <div class="result-section" id="result">
+        <h2>HASIL DIAGNOSA</h2>
+        <div class="result-item" id="diagnosisResult"></div>
+        <div class="result-item">Gejala yang dipilih :</div>
+        <div id="selectedSymptoms"></div>
+        <button class="back-btn" onclick="goBack()">← Kembali ke input gejala</button>
+    </div>
+
+    <script>
+        function showInput() {
+            document.getElementById('home').style.display = 'none';
+            document.getElementById('input').style.display = 'block';
+        }
+
+        function processDiagnosis() {
+            const symptoms = document.getElementsByName('symptom');
+            const selected = [];
+            let diagnoses = {};
+
+            for (let symptom of symptoms) {
+                if (symptom.checked) {
+                    selected.push(symptom.value);
+                    if (symptom.value === 'not_booting' || symptom.value === 'beep_sound') {
+                        diagnoses['Motherboard rusak'] = (diagnoses['Motherboard rusak'] || 0) + 0.3;
+                    }
+                    if (symptom.value === 'system_hang') {
+                        diagnoses['RAM bermasalah'] = (diagnoses['RAM bermasalah'] || 0) + 0.2;
+                    }
+                    if (symptom.value === 'no_display') {
+                        diagnoses['VGA atau monitor bermasalah'] = (diagnoses['VGA atau monitor bermasalah'] || 0) + 0.3;
+                    }
+                    if (symptom.value === 'auto_restart') {
+                        diagnoses['Power Supply bermasalah'] = (diagnoses['Power Supply bermasalah'] || 0) + 0.3;
+                    }
+                    if (symptom.value === 'battery_drain') {
+                        diagnoses['Baterai kembung, rusak/cycle count terlalu tinggi'] = (diagnoses['Baterai kembung, rusak/cycle count terlalu tinggi'] || 0) + 0.4;
+                    }
+                }
+            }
+
+            let resultText = '';
+            for (let diagnosis in diagnoses) {
+                let probability = Math.min(diagnoses[diagnosis], 1).toFixed(3);
+                if (probability > 0) {
+                    resultText += `Kerusakan yang paling mungkin: ${diagnosis} ${probability}\n`;
+                }
+            }
+
+            if (resultText) {
+                document.getElementById('diagnosisResult').innerText = resultText.trim();
+            } else {
+                document.getElementById('diagnosisResult').innerText = 'Tidak ada gejala yang dipilih';
+            }
+
+            document.getElementById('selectedSymptoms').innerText = selected.map(s => `• ${getSymptomText(s)}`).join('\n');
+            document.getElementById('input').style.display = 'none';
+            document.getElementById('result').style.display = 'block';
+        }
+
+        function getSymptomText(value) {
+            const symptomMap = {
+                'not_booting': 'Komputer tidak menyalah',
+                'beep_sound': 'Muncul bunyi beep',
+                'system_hang': 'Sistem Hang',
+                'no_display': 'Layar Tidak Tampil',
+                'auto_restart': 'Komputer Restart Sendiri',
+                'battery_drain': 'Baterai boros'
+            };
+            return symptomMap[value] || value;
+        }
+
+        function goBack() {
+            document.getElementById('result').style.display = 'none';
+            document.getElementById('input').style.display = 'block';
+            const symptoms = document.getElementsByName('symptom');
+            for (let symptom of symptoms) {
+                symptom.checked = false;
+            }
+        }
+    </script>
+</body>
+</html>
